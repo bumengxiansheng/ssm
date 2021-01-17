@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zking.ssm.cy.mapper.SysMenuMapper">
+    <resultMap id="BaseResultMap" type="com.zking.ssm.cy.model.SysMenu">
+        <constructor>
+            <idArg column="menu_id" jdbcType="BIGINT" javaType="java.lang.Long"/>
+            <arg column="parent_id" jdbcType="BIGINT" javaType="java.lang.Long"/>
+            <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="url" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="perms" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="type" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="icon" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="order_num" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        </constructor>
+    </resultMap>
+    <!--    查询所有菜单-->
+    <resultMap id="AllMenu" type="com.zking.ssm.cy.model.SysMenu">
+        <id column="menu_id" property="menuId" javaType="java.lang.Long"/>
+        <result column="parent_id" property="parentId" javaType="java.lang.Long"/>
+        <result column="name" property="name" javaType="java.lang.String"/>
+        <result column="url" property="url" javaType="java.lang.String"/>
+        <result column="perms" property="perms" javaType="java.lang.String"/>
+        <result column="type" property="type" javaType="java.lang.Integer"/>
+        <result column="icon" property="icon" javaType="java.lang.String"/>
+        <result column="order_num" property="orderNum" javaType="java.lang.Integer"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        menu_id
+        , parent_id, name, url, perms, type, icon, order_num
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_menu
+        where menu_id = #{menuId,jdbcType=BIGINT}
+    </select>
+    <select id="listAll" parameterType="com.zking.ssm.cy.model.SysMenu" resultMap="AllMenu">
+        select *
+        from sys_menu
+        where parent_id = 0
+        order by order_num
+    </select>
+    <select id="initChildren" parameterType="com.zking.ssm.cy.model.SysMenu" resultMap="AllMenu">
+        select *
+        from sys_menu
+        where parent_id = 1
+           or parent_id = 31
+           or parent_id = 131
+           or parent_id = 146
+           or parent_id = 165
+           or parent_id = 176
+           or parent_id = 187
+           or parent_id = 188
+           or parent_id = 189
+           or parent_id = 236
+           or parent_id = 242
+        order by parent_id
+    </select>
+    <!--    #{parentId,jdbcType=BIGINT}-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from sys_menu
+        where menu_id = #{menuId,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.zking.ssm.cy.model.SysMenu">
+        insert into sys_menu (menu_id, parent_id, name,
+                              url, perms, type, icon,
+                              order_num)
+        values (#{menuId,jdbcType=BIGINT}, #{parentId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR},
+                #{url,jdbcType=VARCHAR}, #{perms,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{icon,jdbcType=VARCHAR},
+                #{orderNum,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" parameterType="com.zking.ssm.cy.model.SysMenu">
+        insert into sys_menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="menuId != null">
+                menu_id,
+            </if>
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+            <if test="perms != null">
+                perms,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="icon != null">
+                icon,
+            </if>
+            <if test="orderNum != null">
+                order_num,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="menuId != null">
+                #{menuId,jdbcType=BIGINT},
+            </if>
+            <if test="parentId != null">
+                #{parentId,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null">
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="perms != null">
+                #{perms,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="icon != null">
+                #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="orderNum != null">
+                #{orderNum,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.zking.ssm.cy.model.SysMenu">
+        update sys_menu
+        <set>
+            <if test="parentId != null">
+                parent_id = #{parentId,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null">
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="perms != null">
+                perms = #{perms,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="icon != null">
+                icon = #{icon,jdbcType=VARCHAR},
+            </if>
+            <if test="orderNum != null">
+                order_num = #{orderNum,jdbcType=INTEGER},
+            </if>
+        </set>
+        where menu_id = #{menuId,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.zking.ssm.cy.model.SysMenu">
+        update sys_menu
+        set parent_id = #{parentId,jdbcType=BIGINT},
+            name      = #{name,jdbcType=VARCHAR},
+            url       = #{url,jdbcType=VARCHAR},
+            perms     = #{perms,jdbcType=VARCHAR},
+            type      = #{type,jdbcType=INTEGER},
+            icon      = #{icon,jdbcType=VARCHAR},
+            order_num = #{orderNum,jdbcType=INTEGER}
+        where menu_id = #{menuId,jdbcType=BIGINT}
+    </update>
+</mapper>
